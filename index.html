@@ -26,6 +26,36 @@
                     link.href = `details.html?id=${post.id}`;
                     link.textContent = post.title;
                     item.appendChild(link);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.style.marginLeft = '10px';
+                    deleteButton.onclick = () => {
+                        fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}`, {
+                            method: 'DELETE',
+                        })
+                            .then(res => {
+                                if (res.ok) {
+                                    item.remove();
+                                } else {
+                                    alert('Failed to delete post.');
+                                }
+                            });
+                    };
+
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.style.marginLeft = '10px';
+                    editButton.onclick = () => {
+                        window.location.href = `edit.html?id=${post.id}`;
+                    };
+
+                    const buttonGroup = document.createElement('div');
+                    buttonGroup.className = 'button-group';
+                    buttonGroup.appendChild(deleteButton);
+                    buttonGroup.appendChild(editButton);
+                    item.appendChild(buttonGroup);
+
                     list.appendChild(item);
                 });
             });
