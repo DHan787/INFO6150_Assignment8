@@ -78,6 +78,7 @@
         const titleInput = document.getElementById('title');
         const bodyInput = document.getElementById('body');
 
+        // 从 API 获取原始数据用于展示
         fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
             .then(response => response.json())
             .then(post => {
@@ -85,24 +86,22 @@
                 bodyInput.value = post.body;
             });
 
+        // 保存到 localStorage 而不是发 PUT 请求
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title: titleInput.value,
-                    body: bodyInput.value,
-                }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert('Post updated!');
-                    window.location.href = 'index.html';
-                })
-                .catch(err => alert('Update failed.'));
+
+            const updatedPost = {
+                id: postId,
+                title: titleInput.value,
+                body: bodyInput.value,
+            };
+
+            const editedPosts = JSON.parse(localStorage.getItem('editedPosts') || '{}');
+            editedPosts[postId] = updatedPost;
+            localStorage.setItem('editedPosts', JSON.stringify(editedPosts));
+
+            alert('Changes saved locally!');
+            window.location.href = 'index.html';
         });
     </script>
 </body>

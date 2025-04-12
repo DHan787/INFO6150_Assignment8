@@ -1,3 +1,8 @@
+<!--
+ * @Author: Jiang Han
+ * @Date: 2025-04-11 13:27:50
+ * @Description: 
+-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,7 +25,14 @@
             .then(res => res.json())
             .then(posts => {
                 const list = document.getElementById('post-list');
+                const editedPosts = JSON.parse(localStorage.getItem('editedPosts') || '{}');
+
                 posts.slice(0, 10).forEach(post => {
+                    if (editedPosts[post.id]) {
+                        post.title = editedPosts[post.id].title;
+                        post.body = editedPosts[post.id].body;
+                    }
+
                     const item = document.createElement('li');
                     const link = document.createElement('a');
                     link.href = `details.html?id=${post.id}`;
